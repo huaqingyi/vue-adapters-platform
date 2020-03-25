@@ -1,0 +1,36 @@
+export interface AdapterColumn {
+    type?: string;
+    prop?: string;
+    label?: string;
+    field?: string;
+    title?: string;
+    width?: Array<number | string>;
+    minWidth?: Array<number | string>;
+    resizable?: boolean;
+    fixed?: string;
+    align?: string;
+    headerAlign?: string;
+    footerAlign?: string;
+    showOverflow?: boolean | string;
+    showHeaderOverflow?: boolean | string;
+    showFooterOverflow?: boolean | string;
+    className?: Array<string | Function>;
+    headerClassName?: Array<string | Function>;
+    footerClassName?: Array<string | Function>;
+    formatter?: Array<string | Function | Array<any>>;
+    indexMethod?: Function;
+    sortable?: boolean;
+    remoteSort?: boolean;
+    sortBy?: Array<string | Array<any>>;
+    sortMethod?: Function;
+    filters?: Array<any>;
+    filterMultiple?: boolean;
+    filterMethod?: Function;
+    filterRender?: object;
+    treeNode?: boolean;
+    visible?: boolean;
+    cellRender?: object;
+    editRender?: object;
+    contentRender?: object;
+    params?: object;
+}
