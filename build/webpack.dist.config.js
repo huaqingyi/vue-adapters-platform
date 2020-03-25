@@ -1,16 +1,18 @@
-var path = require('path')
-var webpack = require('webpack')
+const path = require('path')
+const webpack = require('webpack')
+const utils = require('./utils')
 
 module.exports = {
-    entry: './src/plugin/index.js', // 入口文件
+    entry: './plugin/index.tsx', // 入口文件
     output: {
         path: path.resolve(__dirname, '../dist'), // 打包后的文件放这里
         publicPath: '/dist/',
         filename: 'index.js',
-        library: 'index', // library指定的是引入项目的模块名
-        libraryTarget: 'umd', // libraryTarget会生成不同umd的代码,可以只是commonjs标准的，也可以是指amd标准的，也可以只是通过script标签引入的（必须加上）
+        // library: 'index', // library指定的是引入项目的模块名
+        libraryTarget: 'commonjs', // libraryTarget会生成不同umd的代码,可以只是commonjs标准的，也可以是指amd标准的，也可以只是通过script标签引入的（必须加上）
         umdNamedDefine: true // 会对 UMD 的构建过程中的 AMD 模块进行命名。否则就使用匿名的 define（必须加上）
     },
+    watch: true,
     module: {
         rules: [
             {
@@ -42,7 +44,7 @@ module.exports = {
                 options: {
                     loaders: {
                         // Since sass-loader (weirdly) has SCSS as its default parse mode, we map
-                        // the "scss" and "sass" values for the lang attribute to the right configs here.
+                        // the 'scss' and 'sass' values for the lang attribute to the right configs here.
                         // other preprocessors should work out of the box, no loader config like this necessary.
                         'scss': [
                             'vue-style-loader',
@@ -64,11 +66,42 @@ module.exports = {
                 exclude: /node_modules/
             },
             {
-                test: /\.(png|jpg|gif|svg)$/,
-                loader: 'file-loader',
+                test: /\.ts$/,
+                exclude: /node_modules/,
+                enforce: 'pre',
+                loader: 'tslint-loader'
+            },
+            {
+                test: /\.tsx?$/,
+                loader: 'ts-loader',
+                exclude: [/node_modules/],
                 options: {
-                    name: '[name].[ext]?[hash]'
+                    appendTsSuffixTo: [/\.vue$/]
                 }
+            },
+            {
+              test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+              loader: 'url-loader',
+              options: {
+                limit: 10000,
+                name: utils.assetsPath('img/[name].[hash:7].[ext]')
+              }
+            },
+            {
+              test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+              loader: 'url-loader',
+              options: {
+                limit: 10000,
+                name: utils.assetsPath('media/[name].[hash:7].[ext]')
+              }
+            },
+            {
+              test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+              loader: 'url-loader',
+              options: {
+                limit: 10000,
+                name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+              }
             }
         ]
     },
@@ -76,7 +109,7 @@ module.exports = {
         alias: {
             'vue$': 'vue/dist/vue.esm.js'
         },
-        extensions: ['*', '.js', '.vue', '.json']
+        extensions: ['*', '.js', '.ts', '.tsx', '.vue', '.json']
     },
     devServer: {
         historyApiFallback: true,
