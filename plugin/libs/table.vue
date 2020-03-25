@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="moblie-table" v-if="isMobile">
-            <van-cell is-link @click="showSearch"><van-icon name="search" /></van-cell>
+            <div @click="showSearch"><van-icon name="search" /></div>
             <van-popup v-model="visibleSearch" closeable position="bottom" class="search-form" />
             <van-list :value="loading" :finished="finished" finished-text="没有更多了">
                 <mcol v-for="(item, i) in data" :columns="columns" :data="item" :title="firestField" :key="i">
