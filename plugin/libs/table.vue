@@ -1,8 +1,12 @@
 <template>
     <div>
         <div class="moblie-table" v-if="isMobile">
-            <div @click="showSearch"><van-icon name="search" /></div>
-            <van-popup v-model="visibleSearch" closeable position="bottom" class="search-form" />
+            <template v-if="showSlot('table-search')">
+                <div @click="showSearch"><van-icon name="search" /></div>
+            </template>
+            <van-popup v-model="visibleSearch" closeable position="bottom" class="search-form">
+                <slot name="table-search" />
+            </van-popup>
             <van-list :value="loading" :finished="finished" finished-text="没有更多了">
                 <mcol v-for="(item, i) in data" :columns="columns" :data="item" :title="firestField" :key="i">
                     <template v-for="col in columns" v-slot:[col.field]>
