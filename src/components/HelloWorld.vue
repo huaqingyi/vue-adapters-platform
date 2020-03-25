@@ -76,7 +76,7 @@
                                     <el-option label="区域二" value="beijing"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item class="search">
+                            <el-form-item class="btn center search">
                                 <div class="btn-item">
                                     <adapter-button native-type="button" @click="submitForm('ruleForm1')" type="info" size="small">搜索</adapter-button>
                                 </div>
