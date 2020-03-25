@@ -6,11 +6,15 @@
                 <div class="info-msg">
                     <vxe-table :data="mapData(data)">
                         <vxe-table-column field="field" />
-                        <vxe-table-column field="value" />
+                        <vxe-table-column field="value">
+                            <template v-slot="{ row }" show-overflow>
+                                <slot :name="row.fieldName" />
+                            </template>
+                        </vxe-table-column>
                     </vxe-table>
                 </div>
                 <div class="info-btns">
-                    <slot />
+                    <slot name="table-option" />
                 </div>
             </div>
         </van-popup>
@@ -77,7 +81,8 @@ export default class extends Vue {
     public mapData(row: any) {
         return map(row, (value, field) => ({
             field: this.fieldNames[field],
-            value
+            value,
+            fieldName: field,
         }));
     }
 

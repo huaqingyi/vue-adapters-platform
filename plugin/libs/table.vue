@@ -1,18 +1,40 @@
 <template>
     <div>
-        <div v-if="isMobile">
+        <div class="moblie-table" v-if="isMobile">
+            <van-cell is-link @click="showSearch"><van-icon name="search" /></van-cell>
+            <van-popup v-model="visibleSearch" closeable position="bottom" class="search-form" />
             <van-list :value="loading" :finished="finished" finished-text="没有更多了">
                 <mcol v-for="(item, i) in data" :columns="columns" :data="item" :title="firestField" :key="i">
-                    <slot name="option" v-bind:option="item"/>
+                    <template v-for="col in columns" v-slot:[col.field]>
+                        <template v-if="showSlot(col.field)">
+                            <slot :name="col.field" v-bind:prop="item" v-bind:field="col.field" v-bind:value="item[col.field]" />
+                        </template>
+                        <template v-else>
+                            {{item[col.field]}}
+                        </template>
+                    </template>
+                    <template v-slot:table-option>
+                        <slot name="table-option" v-bind:table-option="item" />
+                    </template>
                 </mcol>
             </van-list>
         </div>
         <div v-else>
-            <vxe-table :data="data">
-                <vxe-table-column :loading="loading" v-for="(item, i) in columns" v-bind="item" :key="i"></vxe-table-column>
+            <slot name="table-search" />
+            <vxe-table :loading="loading" :data="data">
+                <vxe-table-column v-for="(item, i) in columns" v-bind="item" :key="i">
+                    <template v-slot="{ row }">
+                        <template v-if="showSlot(item.field)">
+                            <slot :name="item.field" v-bind:prop="row" v-bind:field="item.field" v-bind:value="row[item.field]" />
+                        </template>
+                        <template v-else>
+                            {{row[item.field]}}
+                        </template>
+                    </template>
+                </vxe-table-column>
                 <vxe-table-column title="操作" show-overflow>
                     <template v-slot="{ row }" show-overflow>
-                        <slot name="option" v-bind:option="row"/>
+                        <slot name="table-option" v-bind:prop="row" />
                     </template>
                 </vxe-table-column>
             </vxe-table>
@@ -83,11 +105,13 @@ export default class extends Vue {
     public collapses: Array < string | number > ;
     public firestField ? : string;
     public data: Array < any > ;
+    public visibleSearch: boolean;
 
     constructor() {
         super();
         this.collapses = [0];
         this.data = [];
+        this.visibleSearch = false;
     }
 
     @Watch('loading')
@@ -100,11 +124,22 @@ export default class extends Vue {
         this.data = await this.dataSource();
     }
 
+    public showSlot(field: string) {
+        return this.$scopedSlots[field] ? true : false;
+    }
+
+    public showSearch() {
+        this.visibleSearch = true;
+    }
+
 }
 </script>
 
 <style scoped>
-.table {
-    display: flex;
+.moblie-table {
+    position: relative;
+}
+.search-form{
+    height: 70%;
 }
 </style>
