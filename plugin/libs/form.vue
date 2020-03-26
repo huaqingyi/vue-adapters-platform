@@ -194,26 +194,21 @@ export default class extends Vue {
             &.search-form {
                 justify-content: left;
                 .el-form-item {
-                    &:nth-child(odd) {
-                        &.search {
-                            width: 100%;
-                            .el-form-item__content {
-                                display: flex;
-                                &:before {
-                                    display: initial;
-                                    flex: 1;
-                                }
-                            }
-                            .el-form-item__content {
-                                .btn-item {
-                                    padding: 0 .75rem 0 0;
-                                    &:last-child {
-                                        padding: 0;
-                                    }
-                                }
+                    &.search {
+                        min-width: inherit;
+                        flex: 1;
+                        &:after {
+                            display: table;
+                            flex: initial;
+                        }
+                        .el-form-item__content {
+                            &:after {
+                                display: table;
+                                flex: initial;
                             }
                         }
-                    }
+                    } // &:nth-child(odd) {
+                    // }
                 }
             }
         }
