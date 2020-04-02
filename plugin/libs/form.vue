@@ -1,7 +1,7 @@
 <template>
-    <div :class="isMobile?'mobile':'pc'">
-        <slot />
-    </div>
+	<div :class="className">
+		<slot />
+	</div>
 </template>
 
 <script lang="ts">
@@ -10,7 +10,27 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 
 @Component
 export default class extends Vue {
-	public get isMobile(): boolean {
+	public isMobile: boolean;
+	public get className(): string {
+		if (this.platform === false) {
+			return this.isMobile ? 'mobile' : 'pc';
+		}
+		if (typeof this.platform === 'string') return this.platform;
+		else return this.isMobile ? 'mobile' : 'pc';
+	}
+
+	@Prop({
+		type: [String, Boolean],
+		default: false
+	})
+	public platform!: string | boolean;
+
+	constructor() {
+		super();
+		this.isMobile = false;
+	}
+
+	public async created() {
 		const userAgentInfo = navigator.userAgent;
 		const mobileAgents = [
 			'Android',
@@ -36,11 +56,7 @@ export default class extends Vue {
 		if (screen_width < 500 && screen_height < 800) {
 			mobile_flag = true;
 		}
-		return mobile_flag;
-	}
-
-	constructor() {
-		super();
+		this.isMobile = mobile_flag;
 	}
 }
 </script>
@@ -229,23 +245,23 @@ export default class extends Vue {
 }
 
 .el-drawer {
-    &.btt {
-        .el-drawer__body {
-            // overflow: auto;
-            position: relative;
-            .el-card {
-                position: absolute;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
-                display: flex;
-                flex-direction: column;
-                .el-card__body {
-                    overflow: auto;
-                }
-            }
-        }
-    }
+	&.btt {
+		.el-drawer__body {
+			// overflow: auto;
+			position: relative;
+			.el-card {
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				display: flex;
+				flex-direction: column;
+				.el-card__body {
+					overflow: auto;
+				}
+			}
+		}
+	}
 }
 </style>

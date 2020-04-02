@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import { AdapterColumn } from '../impls';
 export default class extends Vue {
-    get isMobile(): boolean;
+    isMobile: boolean;
+    get ism(): boolean;
+    platform: string | boolean;
     columns: Array<AdapterColumn>;
     dataSource: () => Promise<Array<any>>;
     loading: boolean;

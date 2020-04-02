@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="moblie-table" v-if="isMobile">
+        <div class="moblie-table" v-if="ism">
             <template v-if="showSlot('table-search')">
                 <div @click="showSearch"><van-icon name="search" /></div>
             </template>
@@ -51,36 +51,31 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AdapterColumn } from '../impls';
 import mcol from './mobile/row.vue';
+import From from './form.vue';
 import { map } from 'lodash';
 
 @Component({
-    components: {
-        mcol
-    }
+	components: {
+		mcol,
+		'adapter-form-warpper': From,
+	}
 })
 export default class extends Vue {
 
-    public get isMobile(): boolean {
-        const userAgentInfo = navigator.userAgent;
-        const mobileAgents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];
-        var mobile_flag = false;
-        //根据userAgent判断是否是手机
-        for (var v = 0; v < mobileAgents.length; v++) {
-            if (userAgentInfo.indexOf(mobileAgents[v]) > 0) {
-                mobile_flag = true;
-                break;
-            }
-        }
+	public isMobile: boolean;
+	public get ism(): boolean {
+		if (this.platform === false) {
+			return this.isMobile ? true : false;
+		}
+		if (typeof this.platform === 'string') return this.platform === 'mobile' ? true: false;
+		else return this.isMobile ? true : false;
+	}
 
-        var screen_width = window.screen.width;
-        var screen_height = window.screen.height;
-
-        //根据屏幕分辨率判断是否是手机
-        if (screen_width < 500 && screen_height < 800) {
-            mobile_flag = true;
-        }
-        return mobile_flag;
-    }
+	@Prop({
+		type: [String, Boolean],
+		default: false
+	})
+	public platform!: string | boolean;
 
     @Prop({
         type: Array,
@@ -111,12 +106,13 @@ export default class extends Vue {
     public data: Array < any > ;
     public visibleSearch: boolean;
 
-    constructor() {
-        super();
+	constructor() {
+		super();
+		this.isMobile = false;
         this.collapses = [0];
         this.data = [];
         this.visibleSearch = false;
-    }
+	}
 
     @Watch('loading')
     public async freashTable() {
